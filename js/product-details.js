@@ -31,5 +31,22 @@ document.addEventListener("DOMContentLoaded", function () {
             img.alt = product.name;
         }
     }
+    // Add product to cart
+function addToCart() {
+    fetch('add-to-cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: productId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('Added to cart!');
+        } else {
+            alert(data.message || 'Could not add to cart.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 });

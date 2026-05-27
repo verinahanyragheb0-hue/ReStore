@@ -36,11 +36,28 @@ function displayProducts(products) {
                         <div class="price">EGP ${product.price}</div>
                     </div>
                 </a>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
             </div>
         `;
         grid.innerHTML += card;
     });
+} 
+// Add product to cart
+function addToCart(productId) {
+    fetch('add-to-cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: productId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('Added to cart!');
+        } else {
+            alert(data.message || 'Could not add to cart.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 // Filter and sort products

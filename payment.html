@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - ReStore</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link href="[link removed]
+```swap" rel="stylesheet">
+</head>
+<body>
+    <main class="payment-wrapper">
+        <div class="container">
+            <h1 class="page-title">Secure Checkout</h1>
+            
+            <div class="checkout-grid">
+                <!-- Form Section -->
+                <div class="checkout-form-container">
+                    <form id="payment-form">
+                        <section class="form-section">
+                            <h3><i class="fa-solid fa-truck"></i> Shipping Information</h3>
+                            <div class="input-group">
+                                <input type="text" name="full-name" placeholder="Full Name" required>
+                                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                            </div>
+                            <input type="text" name="address" placeholder="Street Address" required>
+                            <div class="input-group">
+                                <input type="text" name="city" placeholder="City" required>
+                                <input type="tel" name="phone" placeholder="Phone Number" required>
+                            </div>
+                        </section>
+
+                        <section class="form-section">
+                            <h3><i class="fa-solid fa-credit-card"></i> Payment Method</h3>
+                            <div class="payment-options">
+                                <label class="payment-radio">
+                                    <input type="radio" name="payment-method" value="card" checked>
+                                    <span class="radio-card">
+                                        <i class="fa-solid fa-card-shopping"></i> Card
+                                    </span>
+                                </label>
+                                <label class="payment-radio">
+                                    <input type="radio" name="payment-method" value="paypal">
+                                    <span class="radio-card">
+                                        <i class="fa-brands fa-paypal"></i> PayPal
+                                    </span>
+                                </label>
+                                <label class="payment-radio">
+                                    <input type="radio" name="payment-method" value="cod">
+                                    <span class="radio-card">
+                                        <i class="fa-solid fa-hand-holding-dollar"></i> COD
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div id="card-details" class="card-input-area">
+                                <input type="text" name="card-number" placeholder="Card Number" maxlength="16">
+                                <div class="input-group">
+                                    <input type="text" name="expiry" placeholder="MM/YY" maxlength="5">
+                                    <input type="text" name="cvv" placeholder="CVV" maxlength="3">
+                                </div>
+                            </div>
+                        </section>
+
+                        <button type="submit" class="place-order-btn">Complete Purchase</button>
+                    </form>
+                </div>
+
+                <!-- Summary Section -->
+                <aside class="order-summary-aside">
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+                        <div id="payment-items-list">
+                            <!-- Items will be injected here from JS -->
+                        </div>
+                        <div class="summary-totals">
+                            <div class="total-row"><span>Subtotal</span> <span id="subtotal">$0</span></div>
+                            <div class="total-row"><span>Shipping</span> <span>Free</span></div>
+                            <div class="total-row grand-total"><span>Total</span> <span id="final-total">$0</span></div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/form-validation.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+</html>
