@@ -1,0 +1,103 @@
+
+*{
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+:root{
+    --mainColor: #2C9664;
+    --secondaryColor: #F6A823;
+    --secondaryColorBack: #E8C468;
+    --backgroundColor: #DEEEE5;
+    --disableColor: #888;
+    --mainFont:"Space Grotesk", sans-serif;
+}
+body{
+    font-family: "Space Grotesk", sans-serif;
+}
+header{
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(40px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+}
+.container{
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+nav{
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+
+}
+.logo img{
+    width: auto;
+    height: 30px;
+}
+.logo span{
+    font-size: 20px;
+    font-weight: bold;
+    font-family: var(--mainFont);
+}
+.logo span:last-child{
+    color: var(--mainColor);
+}
+nav ul{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+nav ul li a {
+    color: var(--disableColor); 
+    white-space: nowrap;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 5px;
+    padding: 8px 14px;
+    transition: background-color 0.5s , color 1ms;
+    background-color: transparent;
+}
+nav ul li a:hover{
+    color: black;
+
+    background-color: #ddd;
+}
+nav ul li a.active {
+    background-color: var(--backgroundColor);
+    color: var(--mainColor); 
+    font-weight: 500; 
+}
+.h-icns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.h-icns img:first-child{
+    margin-right: 20px;
+    width: auto;
+    height: 20px;
+}
+.h-icns img:last-of-type{
+    width: auto;
+    height: 45px;
+}
+.h-icns span{
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+    margin-left: 5px;
+    display: inline-block;
+}

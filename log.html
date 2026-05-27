@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/log.css">
+    <link rel="stylesheet" href="css/nav.css">
+     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <title>Document</title>
+</head>
+<body>
+    <div class="main">
+        <div class="left">
+            <div class="left">
+    <div class="sign-buttons">
+        <button id="loginBtn" class="lbtn active">Login</button>
+        <button id="signupBtn" class="lbtn">Sign Up</button>
+    </div>
+
+    <form id="loginForm" action="">
+        <div class="email inpt">
+            <img src="imgs/login/email.gif" alt="email-icon" class="email-icon icns">
+            <input type="email" placeholder="Email or Phone Number" id="l-email">
+        </div>
+        <div class="pass inpt">
+            <img src="imgs/login/lock.gif" alt="lock-icon" class="lock-icon icns">
+            <input type="password" placeholder="Password" id="l-pass"> 
+        </div>
+        <div class="just">
+            <a href="#">Forget your password?</a>
+            <button type="submit" id="login-button"><a href="index.html">Login</a></button>
+        </div>
+    </form>
+
+    <form id="signupForm" action="" style="display: none;">
+        <div class="user inpt">
+            <img src="imgs/login/user1.gif" alt="user-icon" class="icns"> 
+            <input type="text" placeholder="Full Name" id="name">
+        </div>
+        <div class="email inpt">
+            <img src="imgs/login/email.gif" alt="email-icon" class="icns">
+            <input type="email" placeholder="Email Address" id="username">
+        </div>
+        <div class="pass inpt">
+            <img src="imgs/login/lock.gif" alt="lock-icon" class="icns">
+            <input type="password" placeholder="Create Password" id="password">
+        </div>
+        <div class="just">
+            <button class="r-btn" type="submit"><a href="#loginBtn">Register</a></button>
+        </div>
+    </form>
+</div>
+        </div>
+        <div class="right">
+            <div class="logo-container">
+                <span class="logo-text">ReSt</span>
+                <img src="imgs/login/logo.gif" alt="gif-icon" class="eco-earth-inline">
+                <span class="logo-text">re</span>
+            </div>
+            <img src="imgs/login/Computer troubleshooting-amico.svg" alt="background" class="environment-background">
+        </div>
+    </div>
+    <script>
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    signupBtn.addEventListener('click', () => {
+        signupBtn.classList.add('active');
+        loginBtn.classList.remove('active');
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'flex';
+    });
+    loginBtn.addEventListener('click', () => {
+        loginBtn.classList.add('active');
+        signupBtn.classList.remove('active');
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'flex';
+    });
+</script>
+<script src="js/reg.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

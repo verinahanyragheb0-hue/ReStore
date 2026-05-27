@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marketplace - ReStore</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/nav.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/market.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div class="marketplace-header">
+          <div class="content">
+            <h1>Marketplace</h1>
+            <p>Browse thousands of certified pre-owned electronics.</p>
+          </div>
+          <img
+            src="imgs/marketplace/Niche service marketplace-rafiki.svg"
+            alt="market"
+          />
+        </div>
+        <div class="marketplace-controls">
+          <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              placeholder="Search products..."
+              id="searchProduct"
+            />
+          </div>
+          <div class="filter-sort-wrapper">
+            <div class="filter-label">
+              <i class="fa-solid fa-sliders"></i>
+              <span>Filters:</span>
+            </div>
+
+            <div class="select-group">
+              <select id="filter-category">
+                <option value="all">Category: All</option>
+                <option value="phones">Smartphones</option>
+                <option value="laptops">Laptops</option>
+                <option value="tablets">Tablets</option>
+                <option value="accessories">Accessories</option>
+                <option value="gaming">Gaming</option>
+                <option value="wearables">Wearables</option>
+              </select>
+
+              <select id="filter-condition">
+                <option value="all">Condition: All</option>
+                <option value="refurbished">Refurbished</option>
+                <option value="used">Used</option>
+              </select>
+
+              <select id="sort-price">
+                <option value="newest">Newest First</option>
+                <option value="lowest">Price: Lowest</option>
+                <option value="highest">Price: Highest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+              <div class="products-grid">
+          <!--add a product-->
+        </div>
+      </div>
+      <div class="marketplace-actions">
+        <a href="add-product.html" class="m-btn">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>List Your Device</span>
+        </a>
+      </div>
+    </main>
+    <script src="js/nav.js"></script>
+    <script src ="js/market.js"></script>
+  </body>
+</html>
