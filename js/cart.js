@@ -2,8 +2,13 @@
             const listContainer = document.getElementById('cart-list');
             const totalSpan = document.getElementById('grand-total');
             const totalArea = document.getElementById('total-area');
-            fetch('get-cart.php')
-            .then(response => response.json())
+            // Mock API call using localStorage
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    resolve(cart);
+                }, 100);
+            })
             .then(cart => {
                 if (!cart || cart.length === 0) {
                     listContainer.innerHTML = "<h3 style='text-align:center; margin-top:30px;'>Your cart is empty. Start shopping!</h3>";
@@ -23,11 +28,11 @@
                             <img src="${item.img}" alt="${item.name}">
                             <div class="cart-info">
                                 <h3>${item.name}</h3>
-                                <p>Price: EGP ${priceNum.toFixed(2)}</p>
+                                <p>Price: $${priceNum.toFixed(2)}</p>
                             </div>
                             <div class="item-actions" style="display: flex; align-items: center; gap: 20px;">
                                 <div class="item-subtotal">
-                                    <strong>EGP ${priceNum.toFixed(2)}</strong>
+                                    <strong>$${priceNum.toFixed(2)}</strong>
                                 </div>
                                 <button class="delete-btn" onclick="deleteFromCartDB('${item.id}')">
                                     <i class="fa-solid fa-trash-can"></i> Delete
@@ -36,7 +41,7 @@
                         </div>
                     `;
                 }).join('');
-                totalSpan.innerText = `EGP ${total.toFixed(2)}`;
+                totalSpan.innerText = `$${total.toFixed(2)}`;
             })
             .catch(error => {
                 console.error("Error loading cart:", error);
@@ -44,14 +49,15 @@
             });
         }
         function deleteFromCartDB(productId) {
-            fetch('delete-from-cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: productId })
+            // Mock API call using localStorage
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    cart = cart.filter(item => String(item.id) !== String(productId));
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    resolve({ success: true });
+                }, 100);
             })
-            .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     loadCartFromDB();

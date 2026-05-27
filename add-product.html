@@ -31,40 +31,39 @@
             </p>
           </div>
 
-          <form id="addProductForm" action="add-product.php" method="POST" enctype="multipart/form-data">
+          <form id="addProductForm">
             <div class="form-group">
               <label for="p-name">Product Name</label>
+              <input
+                type="text"
+                id="p-name"
+                placeholder="e.g. iPhone 13 Pro - 128GB"
+                required
+              />
             </div>
-            <input
-            type="text"
-            id="p-name"
-            name="p-name"
-            placeholder="e.g. iPhone 13 Pro - 128GB"
-            required
-            />
 
             <div class="form-row">
               <div class="form-group">
                 <label for="p-category">Category</label>
-                <select id="p-category" name="p-category" required>
+                <select id="p-category" required>
                   <option value="">Select Category</option>
                   <option value="phones">Smartphones</option>
                   <option value="laptops">Laptops</option>
-                  <option value="tablets">Tablets</option>
-                  <option value="accessories">Accessories</option>
-                  <option value="gaming">Gaming</option>
-                  <option value="wearables">Wearables</option>
+                  <option value="laptops">Tablets</option>
+                  <option value="laptops">Accessories</option>
+                  <option value="laptops">Gaming</option>
+                  <option value="laptops">Wearbles</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="p-price">Price ($)</label>
-                <input type="number" id="p-price" name="p-price" placeholder="599" required />
+                <input type="number" id="p-price" placeholder="599" required />
               </div>
             </div>
 
             <div class="form-group">
               <label for="p-condition">Condition</label>
-              <select id="p-condition" name="p-condition" required>
+              <select id="p-condition" required>
                 <option value="excellent">Refurbished - Excellent</option>
                 <option value="good">Used - Good</option>
                 <option value="fair">Used - Fair</option>
@@ -75,7 +74,6 @@
               <label for="p-desc">Description</label>
               <textarea
                 id="p-desc"
-                name="p-desc"
                 rows="4"
                 placeholder="Describe the device's history, repairs, or any flaws..."
                 required
@@ -87,7 +85,7 @@
               <div class="image-upload-box">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p>Click to upload or drag and drop</p>
-                <input type="file" name="p-image" accept="image/*" multiple />
+                <input type="file" accept="image/*" multiple />
               </div>
             </div>
 
@@ -103,5 +101,6 @@
       </div>
     </main>
     <script src="js/nav.js"></script>
+    <script src="js/add-product.js"></script>
   </body>
 </html>

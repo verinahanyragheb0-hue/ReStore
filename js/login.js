@@ -1,33 +1,27 @@
-const username = document.getElementById('l-email');
-const password = document.getElementById('l-pass');
-const loginButton = document.getElementById('login-button');
-console.log('Script loaded');
-loginButton.addEventListener('click', login);
+(function() {
+const loginForm = document.getElementById("loginForm");
 
+if (loginForm) {
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault(); 
 
-async function login(e) {
-    e.preventDefault();
+    const user = document.getElementById("l-email").value;
+    const pass = document.getElementById("l-pass").value;
 
-    const user = username.value;
-    const pass = password.value;
-
-    console.log(`Username: ${user}, Password: ${pass}`);
-
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: "POST",
-        body: JSON.stringify({
-            username: user,
-            password: pass
-        }),
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    });
-
-    console.log(response.status);
-
-    if (response.ok) {
-        console.log('Login successful');
-        window.location.href = "log.html";
+    if (user && pass) {
+      localStorage.setItem("isLoggedIn", "true");
+      if (user.toLowerCase().includes("admin")) {
+        localStorage.setItem("userRole", "admin");
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        localStorage.setItem("userRole", "user");
+        alert("Login successful!");
+        window.location.href = "profile.html";
+      }
+    } else {
+      alert("Please enter both email and password.");
     }
+  });
 }
+})();

@@ -1,26 +1,27 @@
-const regForm = document.getElementById('register-form');
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('username');
-const passInput = document.getElementById('password');
-regForm.onsubmit = function(e) {
-    e.preventDefault(); 
-    const data = {
-        name: nameInput.value,
-        email: emailInput.value,
-        pass: passInput.value
-    };
+(function() {
+const signupForm = document.getElementById("signupForm");
 
-    console.log("Data :", data);
+if (signupForm) {
+  signupForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-    fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-type": "application/json" }
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.href = "log.html"; 
-            alert("ReStore!");
-        }
-    });
-};
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password") ? document.getElementById("password").value : document.getElementById("l-pass").value;
+
+    if (user && pass) {
+      localStorage.setItem("isLoggedIn", "true");
+      if (user.toLowerCase().includes("admin")) {
+        localStorage.setItem("userRole", "admin");
+        alert("Registration successful! You are now logged in.");
+        window.location.href = "dashboard.html";
+      } else {
+        localStorage.setItem("userRole", "user");
+        alert("Registration successful! You are now logged in.");
+        window.location.href = "profile.html";
+      }
+    } else {
+      alert("Please fill in all required fields.");
+    }
+  });
+}
+})();

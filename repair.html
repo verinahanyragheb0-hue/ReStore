@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book a Repair - ReStore</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/nav.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/market.css">
+    <link rel="stylesheet" href="css/repair.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="repair-main">
+      <div class="container">
+        <div class="marketplace-header">
+          <div class="content">
+              <h1>Expert Repair Services</h1>
+              <p>
+                Give your device a second life. Our expert technicians can fix
+                screens, replace batteries, and resolve hardware issues.
+              </p>
+            </div>
+              <img
+                src="imgs/hompage/Product teardown-amico.svg"
+                alt="Repair Service"
+              />
+          </div>
+          
+          <div class="services-grid">
+            <div class="service-card">
+              <i class="fa-solid fa-mobile-screen-button"></i>
+              <h3>Screen Replacement</h3>
+              <p>
+                Cracked or bleeding display? We replace screens with high-quality
+                certified parts.
+              </p>
+            </div>
+            <div class="service-card">
+              <i class="fa-solid fa-battery-full"></i>
+              <h3>Battery Replacement</h3>
+              <p>
+                Battery draining fast? Get a fresh battery to restore your
+                device's lifespan.
+              </p>
+            </div>
+            <div class="service-card">
+              <i class="fa-solid fa-plug"></i>
+              <h3>Charging Port Fix</h3>
+              <p>
+                Device not charging or loose connection? We clean or replace
+                faulty ports.
+              </p>
+            </div>
+          </div>
+          
+          <div class="booking-container" id="rs">
+            <h2>Book Your Repair Appointment</h2>
+            <p>
+              Fill out the form below, and we will contact you with a cost
+              estimate and confirmation.
+            </p>
+            
+            <form id="repairBookingForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="client-name">Full Name</label>
+                  <input type="text" id="client-name" placeholder="John Doe" required />
+                </div>
+                <div class="form-group">
+                  <label for="client-email">Email Address</label>
+                  <input type="email" id="client-email" placeholder="john@example.com" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="client-phone">Phone Number</label>
+                  <input type="tel" id="client-phone" placeholder="+1 234 567 8900" required />
+                </div>
+                <div class="form-group">
+                  <label for="device-model">Device Model</label>
+                  <input type="text" id="device-model" placeholder="e.g. iPhone 13 Pro" required />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="repair-type">Issue Type</label>
+                  <select id="repair-type" required>
+                    <option value="">Select the issue</option>
+                    <option value="screen">Screen Damage</option>
+                    <option value="battery">Battery Issues</option>
+                    <option value="charging">Charging Port</option>
+                    <option value="water">Water Damage</option>
+                    <option value="software">Software/Boot loop</option>
+                  <option value="other">Other Hardware Issue</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="appointment-date">Preferred Date</label>
+                <input type="date" id="appointment-date" required />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="issue-desc">Issue Description & History</label>
+              <textarea
+                id="issue-desc"
+                rows="4"
+                placeholder="Please describe how the issue happened, any previous repairs, or specific symptoms..."
+                required
+                ></textarea>
+              </div>
+              
+              <button
+              type="submit"
+              class="m-btn btn"
+              style="width: 100%; margin-top: 15px"
+              >
+              <i class="fa-solid fa-calendar-check"></i> Submit Repair Request
+            </button>
+          </form>
+        </div>
+      </div>
+      </div>
+    </main>
+
+    <script src="js/nav.js"></script>
+    <script src="js/repair.js"></script>
+  </body>
+</html>

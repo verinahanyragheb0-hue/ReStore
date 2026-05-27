@@ -8,18 +8,19 @@ body {
 .site-footer {
     background-color: #152720;
     color: #9ca3af;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: var(--mainFont, system-ui);
     padding: 60px 20px 20px;
     line-height: 1.6;
+    margin-top: auto;
 }
 
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 40px;
+    margin-bottom: 40px;
 }
 
 .footer-col {
@@ -28,19 +29,20 @@ body {
 }
 
 .footer-col.brand-col {
-    flex: 1.5;
+    grid-column: span 1;
 }
 
 .footer-col p {
     margin: 0;
     font-size: 0.95rem;
+    line-height: 1.6;
 }
 
 .footer-logo {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
 .footer-logo-icon {
@@ -51,17 +53,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 36px;
+    height: 36px;
 }
 
 .footer-logo-text {
     color: #ffffff;
     font-size: 1.5rem;
     font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .footer-heading {
     color: #ffffff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: 20px;
     margin-top: 0;
@@ -81,6 +88,7 @@ body {
     color: #9ca3af;
     text-decoration: none;
     transition: color 0.3s ease;
+    font-size: 0.95rem;
 }
 
 .footer-links a:hover {
@@ -89,14 +97,27 @@ body {
 
 .contact-item {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    align-items: center; 
+    gap: 12px;         
+    margin-bottom: 16px;
 }
-
 .contact-icon {
-    color: #34d399;
-    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+.contact-icon img {
+    width: 24px !important;  
+    height: 24px !important;
+    margin-top: 0 !important; 
+    object-fit: contain;
+}
+.contact-item > span:last-child {
+    font-size: 0.95rem;
+    color: #9ca3af;
+    line-height: 1;
 }
 .footer-bottom {
     max-width: 1200px;
@@ -110,6 +131,109 @@ body {
     font-size: 0.9rem;
     gap: 20px;
 }
+
 main {
     flex: 1;
+}
+
+/* ========== TABLET RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 48px 20px 16px;
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+        margin-bottom: 32px;
+    }
+
+    .footer-col.brand-col {
+        grid-column: span 2;
+    }
+
+    .footer-heading {
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+    }
+
+    .footer-logo-text {
+        font-size: 1.3rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-bottom > * {
+        width: 100%;
+    }
+}
+
+/* ========== MOBILE RESPONSIVE ========== */
+@media (max-width: 576px) {
+    .site-footer {
+        padding: 40px 16px 12px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .footer-col.brand-col {
+        grid-column: span 1;
+    }
+
+    .footer-logo {
+        margin-bottom: 12px;
+    }
+
+    .footer-logo-text {
+        font-size: 1.2rem;
+    }
+
+    .footer-logo-icon {
+        font-size: 16px;
+        padding: 6px;
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .footer-heading {
+        font-size: 0.9rem;
+        margin-bottom: 14px;
+    }
+
+    .footer-col p {
+        font-size: 0.9rem;
+    }
+
+    .footer-links a {
+        font-size: 0.9rem;
+    }
+
+    .contact-item {
+        margin-bottom: 10px;
+        gap: 8px;
+    }
+
+    .contact-icon {
+        font-size: 0.9rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        margin: 32px auto 0;
+        padding-top: 16px;
+        font-size: 0.85rem;
+        gap: 12px;
+    }
+
+    .footer-bottom > * {
+        width: 100%;
+    }
 }

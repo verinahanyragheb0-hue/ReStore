@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spare Part Auctions - ReStore</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/nav.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/market.css" />
+    <link rel="stylesheet" href="css/auctions.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== TOAST ===== */
+      .toast-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .toast {
+        padding: 16px 24px;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 1rem;
+        font-family: 'Space Grotesk', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        animation: slideIn 0.4s ease forwards;
+        max-width: 340px;
+      }
+      .toast.success { background: #10b981; color: white; }
+      .toast.error   { background: #ef4444; color: white; }
+      .toast.info    { background: #4f46e5; color: white; }
+      .toast.warning { background: #f59e0b; color: white; }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateX(60px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes slideOut {
+        from { opacity: 1; transform: translateX(0); }
+        to   { opacity: 0; transform: translateX(60px); }
+      }
+
+      /* ===== COUNTDOWN ===== */
+      .time-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(6px);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.3s;
+      }
+      .time-badge.urgent { background: rgba(239,68,68,0.9); }
+      .time-badge.ended  { background: rgba(100,116,139,0.9); }
+
+      /* ===== AUCTION CARD OVERLAY (ended) ===== */
+      .auction-card.ended-card {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .auction-card.ended-card .m-btn.btn {
+        background: #94a3b8;
+        cursor: not-allowed;
+      }
+      .winner-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: white;
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-top: 8px;
+      }
+      /* Claim button for winner */
+      .claim-btn {
+        background: linear-gradient(135deg, #10b981, #34d399) !important;
+        color: white !important;
+        border: none;
+        cursor: pointer !important;
+        pointer-events: all !important;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+        50%       { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+      }
+
+      /* ===== BID MODAL ===== */
+      .bid-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,0.6);
+        backdrop-filter: blur(6px);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .bid-modal.open { display: flex; }
+      .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        position: relative;
+        animation: modalIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+      }
+      @keyframes modalIn {
+        from { opacity: 0; transform: scale(0.92) translateY(20px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      .close-modal {
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        font-size: 1.6rem;
+        cursor: pointer;
+        color: #94a3b8;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+      .close-modal:hover { color: #1e293b; }
+      .modal-content h2 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 6px;
+      }
+      #modal-part-name {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+      .modal-info-row {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.95rem;
+        color: #475569;
+        font-weight: 500;
+      }
+      .modal-info-row strong { color: #4f46e5; font-size: 1.1rem; }
+      #modal-bid-label {
+        display: block;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+      }
+      #bid-amount {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        font-size: 1.1rem;
+        font-family: 'Space Grotesk', sans-serif;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+      }
+      #bid-amount:focus {
+        border-color: #4f46e5;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(79,70,229,0.12);
+      }
+      #confirm-bid-btn {
+        margin-top: 18px;
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        font-family: 'Space Grotesk', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(79,70,229,0.3);
+        position: relative;
+        overflow: hidden;
+      }
+      #confirm-bid-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(79,70,229,0.4);
+      }
+      #confirm-bid-btn::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+      }
+      #confirm-bid-btn:hover::after { left: 100%; }
+
+      /* ===== BID HISTORY ===== */
+      .bid-history {
+        margin-top: 10px;
+        font-size: 0.82rem;
+        color: #64748b;
+      }
+      .bid-history span {
+        display: block;
+        padding: 3px 0;
+        border-bottom: 1px dashed #e2e8f0;
+      }
+
+      /* ===== CONFETTI ===== */
+      #confetti-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 9998;
+      }
+
+      /* ===== EMPTY STATE ===== */
+      .empty-auctions {
+        text-align: center;
+        padding: 80px 20px;
+        color: #94a3b8;
+      }
+      .empty-auctions i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .empty-auctions p { font-size: 1.2rem; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <main class="auctions-main">
+      <div class="container">
+        <div class="marketplace-header">
+          <div class="content">
+            <h1>Spare Part Auctions</h1>
+            <p>
+              Bid on genuine, high-quality spare parts salvaged from
+              electronics. Find rare components and save electronic waste.
+            </p>
+          </div>
+          <img src="imgs/hompage/Auction-pana.svg" alt="Auctions Gavel" />
+        </div>
+
+        <!-- Auction cards injected here -->
+        <div class="auctions-grid" id="auctions-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Bid Modal -->
+    <div class="bid-modal" id="bidModal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-modal-btn">&times;</span>
+        <h2>Place Your Bid</h2>
+        <p id="modal-part-name"></p>
+
+        <div class="modal-info-row">
+          <span>Current Highest Bid</span>
+          <strong id="modal-current-bid">$0.00</strong>
+        </div>
+        <div class="modal-info-row">
+          <span>Minimum Next Bid</span>
+          <strong id="min-bid-val">$0.00</strong>
+        </div>
+
+        <label id="modal-bid-label" for="bid-amount">Your Bid Amount ($)</label>
+        <input type="number" id="bid-amount" placeholder="Enter amount" required />
+        <button id="confirm-bid-btn">
+          <i class="fa-solid fa-gavel"></i> Confirm Bid
+        </button>
+      </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script src="js/auctions.js"></script>
+  </body>
+</html>

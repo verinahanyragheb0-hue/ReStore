@@ -7,6 +7,7 @@ async function loadComponent(filePath, position) {
     document.body.insertAdjacentHTML(position, data);
     if (filePath === 'nav.html') {
       setActiveLink();
+      updateNavForAuth();
     }
   } catch (error) {
     console.error(`Error loading component:`, error);
@@ -29,6 +30,47 @@ function setActiveLink() {
     });
   });
 }
+function updateNavForAuth() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const userRole = localStorage.getItem("userRole");
+
+  const loginLink = document.querySelector(".loginlink");
+  const dashboardLink = document.querySelector(".dashboardlink");
+
+  if (isLoggedIn) {
+    if (loginLink) loginLink.style.display = "none";
+    if (dashboardLink) {
+      dashboardLink.style.display = "inline";
+      if (userRole === "admin") {
+        dashboardLink.href = "dashboard.html";
+        dashboardLink.innerHTML = "Dashboard";
+      } else {
+        dashboardLink.href = "profile.html";
+        dashboardLink.innerHTML = "Profile";
+      }
+      
+      // Add Logout button if it doesn't exist yet
+      if (!document.querySelector(".logoutlink")) {
+        const logoutBtn = document.createElement("a");
+        logoutBtn.href = "#";
+        logoutBtn.className = "logoutlink";
+        logoutBtn.style = "margin-right: 15px; font-weight: bold; color: inherit; text-decoration: none; cursor: pointer;";
+        logoutBtn.innerHTML = "Logout";
+        logoutBtn.onclick = function(e) {
+          e.preventDefault();
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("userRole");
+          window.location.href = "index.html";
+        };
+        dashboardLink.after(logoutBtn);
+      }
+    }
+  } else {
+    if (loginLink) loginLink.style.display = "inline";
+    if (dashboardLink) dashboardLink.style.display = "none";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadComponent("nav.html", "afterbegin");
   loadComponent("footer.html", "beforeend");
