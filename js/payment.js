@@ -74,21 +74,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = form.querySelector('.place-order-btn');
 
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (paymentValidator.validate()) {
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = "0.7";
-            submitBtn.style.cursor = "not-allowed";
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            setTimeout(() => {
+    e.preventDefault();
+    if (paymentValidator.validate()) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.7";
+        submitBtn.style.cursor = "not-allowed";
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+        const totalAmount = document.getElementById('final-total')?.textContent?.replace('$', '') || 0;
+        const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'card';
+
+        const data = {
+            fullName:      form.querySelector('[name="full-name"]').value,
+            email:         form.querySelector('[name="email"]').value,
+            address:       form.querySelector('[name="address"]').value,
+            city:          form.querySelector('[name="city"]').value,
+            phone:         form.querySelector('[name="phone"]').value,
+            paymentMethod: paymentMethod,
+            totalAmount:   parseFloat(totalAmount) || 0
+        };
+
+        fetch('submit-order.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
                 localStorage.removeItem('pending_claim');
                 showToast("Order placed successfully! Redirecting...", "success");
                 setTimeout(() => {
                     window.location.href = "index.html";
                 }, 2000);
-            }, 1500);
-        } else {
-            showToast("Please check the highlighted errors", "error");
-        }
-    });
-});
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+                submitBtn.innerHTML = 'Complete Purchase';
+                showToast(result.message || "Something went wrong.", "error");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast("Could not connect to server.", "error");
+        });
+
+    } else {
+        showToast("Please check the highlighted errors", "error");
+    }
+});
+});
