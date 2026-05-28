@@ -1,41 +1,40 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const bookingForm = document.getElementById("repairBookingForm");
-    if (bookingForm) {
-        bookingForm.addEventListener("submit", async function(e) {
-            e.preventDefault();
-            const bookingData = {
-                clientName: document.getElementById("client-name").value,
-                clientEmail: document.getElementById("client-email").value,
-                clientPhone: document.getElementById("client-phone").value,
-                deviceModel: document.getElementById("device-model").value,
-                repairType: document.getElementById("repair-type").value,
-                appointmentDate: document.getElementById("appointment-date").value,
-                description: document.getElementById("issue-desc").value
-            };
-            console.log("Sending booking request:", bookingData);
-            try {
-                // Mock API Call
-                const data = await new Promise((resolve) => {
-                    setTimeout(() => {
-                        const repairs = JSON.parse(localStorage.getItem('repairs') || '[]');
-                        bookingData.id = Date.now();
-                        bookingData.status = 'Pending';
-                        repairs.push(bookingData);
-                        localStorage.setItem('repairs', JSON.stringify(repairs));
-                        resolve({ success: true });
-                    }, 100);
-                });
-                if (data.success) {
-                    alert(data.message || "Your repair request has been booked successfully! 🛠️");
-                    bookingForm.reset();
-                } else {
-                    alert(data.message || "Failed to book appointment. Please try again.");
-                }
+document.addEventListener('DOMContentLoaded', function () {
 
-            } catch (error) {
-                console.error("Error connecting to server:", error);
-                alert("An error occurred while connecting to the server. Please try again later.");
-            }
+    const form = document.getElementById('repairBookingForm');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                fullName:        document.getElementById('client-name').value,
+                email:           document.getElementById('client-email').value,
+                phone:           document.getElementById('client-phone').value,
+                deviceModel:     document.getElementById('device-model').value,
+                issueType:       document.getElementById('repair-type').value,
+                appointmentDate: document.getElementById('appointment-date').value,
+                issueDesc:       document.getElementById('issue-desc').value
+            };
+
+            fetch('submit-repair.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Your repair request has been submitted! We will contact you soon.');
+                    form.reset();
+                } else {
+                    alert(result.message || 'Something went wrong. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Could not connect to server.');
+            });
         });
     }
+
 });
