@@ -1,3 +1,39 @@
+// Load products from database and inject into the grid
+function loadProductsFromDB() {
+    fetch('get_products.php')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.products.length > 0) {
+            const grid = document.querySelector('.products-grid');
+            grid.innerHTML = '';
+            data.products.forEach(product => {
+                const card = `
+                    <div class="product-card" 
+                         data-id="${product.id}" 
+                         data-category="${product.category}">
+                        <a href="product-details.html?id=${product.id}" class="product-link">
+                            <div class="product-image">
+                                <img src="${product.image_path ? product.image_path : 'imgs/hompage/repair.gif'}" alt="${product.name}" />
+                            </div>
+                            <div class="product-info">
+                                <span class="condition">${product.condition_type}</span>
+                                <h3>${product.name}</h3>
+                                <div class="price">EGP ${parseFloat(product.price).toFixed(2)}</div>
+                            </div>
+                        </a>
+                        <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+    })
+    .catch(error => console.error('Error loading products:', error));
+}
+
+// Run on page load
+loadProductsFromDB();
+
 document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("add-to-cart-btn")) {
