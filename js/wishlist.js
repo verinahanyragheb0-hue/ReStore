@@ -8,11 +8,8 @@ class WishlistManager {
   }
 
   init() {
-    // Add wishlist buttons to product cards
     this.addWishlistButtons();
-    // Update button states
     this.updateWishlistButtons();
-    // Listen for dynamically added cards
     document.addEventListener("click", (e) => this.handleWishlistClick(e));
   }
 
@@ -67,35 +64,67 @@ class WishlistManager {
       const productName = card.querySelector("h3")?.textContent || "Product";
 
       if (this.isInWishlist(productId)) {
-        this.removeFromWishlist(productId);
+        this.wishlist = this.wishlist.filter(item => item.id !== String(productId));
+        this.updateWishlistButtons();
         showToast(`Removed "${productName}" from wishlist`, "info");
+        this.removeFromWishlist(productId);
       } else {
-        this.addToWishlist(productId, productName);
+        this.wishlist.push({ id: String(productId), name: productName });
+        this.updateWishlistButtons();
         showToast(`Added "${productName}" to wishlist ❤️`, "success");
+        this.addToWishlist(productId, productName);
       }
-
-      this.updateWishlistButtons();
     }
   }
 
   addToWishlist(productId, productName) {
-    if (!this.isInWishlist(productId)) {
-      this.wishlist.push({
-        id: productId,
-        name: productName,
-        addedAt: new Date().toISOString()
-      });
-      this.saveWishlist();
-    }
+    fetch('add-to-wishlist.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `product_id=${productId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error === 'not_logged_in') {
+        this.wishlist = this.wishlist.filter(item => item.id !== String(productId));
+        this.updateWishlistButtons();
+        showToast("Please login to save to wishlist", "warning");
+        setTimeout(() => window.location.href = 'log.html', 1500);
+      } else if (!data.success) {
+        this.wishlist = this.wishlist.filter(item => item.id !== String(productId));
+        this.updateWishlistButtons();
+        showToast("Failed to add to wishlist", "error");
+      }
+    })
+    .catch(() => {
+      this.wishlist = this.wishlist.filter(item => item.id !== String(productId));
+      this.updateWishlistButtons();
+      showToast("Connection error", "error");
+    });
   }
 
   removeFromWishlist(productId) {
-    this.wishlist = this.wishlist.filter(item => item.id !== productId);
-    this.saveWishlist();
+    fetch('delete-from-wishlist.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `product_id=${productId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error === 'not_logged_in') {
+        showToast("Please login first", "warning");
+        setTimeout(() => window.location.href = 'log.html', 1500);
+      } else if (!data.success) {
+        showToast("Failed to remove from wishlist", "error");
+      }
+    })
+    .catch(() => {
+      showToast("Connection error", "error");
+    });
   }
 
   isInWishlist(productId) {
-    return this.wishlist.some(item => item.id === productId);
+    return this.wishlist.some(item => item.id === String(productId));
   }
 
   getWishlist() {
@@ -103,26 +132,40 @@ class WishlistManager {
   }
 
   clearWishlist() {
-    this.wishlist = [];
-    this.saveWishlist();
-    showToast("Wishlist cleared", "info");
+    const ids = this.wishlist.map(item => item.id);
+    Promise.all(ids.map(id =>
+      fetch('delete-from-wishlist.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `product_id=${id}`
+      })
+    )).then(() => {
+      this.wishlist = [];
+      this.updateWishlistButtons();
+      showToast("Wishlist cleared", "info");
+    });
   }
 
   loadWishlist() {
-    try {
-      const stored = localStorage.getItem(this.wishlistKey);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
+    fetch('get-wishlist.php')
+      .then(res => res.json())
+      .then(items => {
+        this.wishlist = items.map(item => ({
+          id: String(item.id),
+          name: item.name,
+          price: item.price,
+          image: item.image
+        }));
+        this.updateWishlistButtons();
+      })
+      .catch(() => {
+        this.wishlist = [];
+      });
+    return [];
   }
 
   saveWishlist() {
-    try {
-      localStorage.setItem(this.wishlistKey, JSON.stringify(this.wishlist));
-    } catch {
-      console.error("Failed to save wishlist");
-    }
+    // handled by PHP
   }
 
   updateWishlistButtons() {
@@ -141,7 +184,6 @@ class WishlistManager {
     });
   }
 
-  // Create wishlist page content
   createWishlistPage() {
     const container = document.createElement("div");
     container.className = "wishlist-container";
@@ -183,10 +225,11 @@ class WishlistManager {
           justify-content: space-between;
           align-items: center;
           animation: slideIn 0.3s ease;
-        " style="animation-delay: ${index * 0.1}s">
+          animation-delay: ${index * 0.1}s;
+        ">
           <div>
             <h3 style="margin: 0 0 8px; color: #333;">${item.name}</h3>
-            <p style="margin: 0; color: #666; font-size: 13px;">Added: ${new Date(item.addedAt).toLocaleDateString()}</p>
+            <p style="margin: 0; color: #666; font-size: 13px;">EGP ${item.price ? Number(item.price).toFixed(2) : '—'}</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button onclick="window.wishlistManager.removeFromWishlist('${item.id}'); location.reload();" style="
@@ -247,6 +290,7 @@ class WishlistManager {
 let wishlistManager;
 document.addEventListener("DOMContentLoaded", () => {
   wishlistManager = new WishlistManager();
+  window.wishlistManager = wishlistManager;
 });
 
 // Toast function (if not already defined)
@@ -285,7 +329,6 @@ if (typeof showToast === "undefined") {
   };
 }
 
-// Export for use
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { WishlistManager };
 }

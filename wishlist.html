@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Wishlist - ReStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    .wishlist-page { max-width: 1200px; margin: 40px auto; padding: 0 20px; min-height: 60vh; }
+    .wishlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .wishlist-header h1 { margin: 0; color: #333; font-size: 28px; }
+    .btn-clear { padding: 10px 18px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .btn-clear:hover { background: #c0392b; }
+    .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+    .wishlist-card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s; }
+    .wishlist-card:hover { transform: translateY(-4px); }
+    .wishlist-card img { width: 100%; height: 180px; object-fit: cover; }
+    .wishlist-card-body { padding: 16px; }
+    .wishlist-card-body h3 { margin: 0 0 6px; color: #333; font-size: 16px; }
+    .wishlist-card-body .price { color: #2C9664; font-weight: 600; font-size: 18px; margin-bottom: 14px; }
+    .wishlist-card-actions { display: flex; gap: 8px; }
+    .btn-view { flex: 1; padding: 10px; background: #2C9664; color: white; border: none; border-radius: 8px; text-decoration: none; text-align: center; font-size: 13px; cursor: pointer; }
+    .btn-view:hover { background: #247654; }
+    .btn-remove { padding: 10px 14px; background: #fef2f2; color: #e74c3c; border: 1px solid #fca5a5; border-radius: 8px; cursor: pointer; font-size: 13px; }
+    .btn-remove:hover { background: #fee2e2; }
+    .empty-state { text-align: center; padding: 80px 20px; }
+    .empty-state i { font-size: 80px; color: #ddd; display: block; margin-bottom: 20px; }
+    .empty-state h2 { color: #333; margin-bottom: 10px; }
+    .empty-state p { color: #666; margin-bottom: 30px; }
+    .btn-shop { display: inline-block; padding: 14px 32px; background: #2C9664; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; }
+    .btn-shop:hover { background: #247654; }
+    #wishlist-count { font-size: 15px; color: #666; font-weight: normal; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav loaded by nav.js -->
+
+  <div class="wishlist-page">
+    <div class="wishlist-header">
+      <h1>My Wishlist <span id="wishlist-count"></span></h1>
+      <button class="btn-clear" id="clear-btn" style="display:none" onclick="clearAll()">
+        <i class="fa-solid fa-trash"></i> Clear All
+      </button>
+    </div>
+    <div id="wishlist-content">
+      <div class="empty-state">
+        <i class="fa-regular fa-heart"></i>
+        <h2>Loading...</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer loaded by nav.js -->
+
+  <script src="js/nav.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script>
+    function renderWishlist(items) {
+      const content = document.getElementById('wishlist-content');
+      const clearBtn = document.getElementById('clear-btn');
+      const countEl = document.getElementById('wishlist-count');
+
+      if (!items || items.length === 0) {
+        clearBtn.style.display = 'none';
+        countEl.textContent = '';
+        content.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-regular fa-heart"></i>
+            <h2>Your Wishlist is Empty</h2>
+            <p>Add items by clicking the heart icon on any product</p>
+            <a href="market.html" class="btn-shop">Browse Marketplace</a>
+          </div>`;
+        return;
+      }
+
+      clearBtn.style.display = 'inline-block';
+      countEl.textContent = `(${items.length} item${items.length > 1 ? 's' : ''})`;
+
+      content.innerHTML = `<div class="wishlist-grid">` +
+        items.map(item => `
+          <div class="wishlist-card" id="card-${item.id}">
+            <img src="${item.image || 'imgs/placeholder.png'}" alt="${item.name}" onerror="this.src='imgs/placeholder.png'"/>
+            <div class="wishlist-card-body">
+              <h3>${item.name}</h3>
+              <p class="price">$${Number(item.price).toFixed(2)}</p>
+              <div class="wishlist-card-actions">
+                <a href="product-details.html?id=${item.id}" class="btn-view">View Product</a>
+                <button class="btn-remove" onclick="removeItem('${item.id}')">
+                  <i class="fa-solid fa-heart-crack"></i>
+                </button>
+              </div>
+            </div>
+          </div>`
+        ).join('') +
+      `</div>`;
+    }
+
+    function removeItem(productId) {
+      fetch('delete-from-wishlist.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `product_id=${productId}`
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById(`card-${productId}`)?.remove();
+          // recount
+          const remaining = document.querySelectorAll('.wishlist-card').length;
+          if (remaining === 0) renderWishlist([]);
+          else document.getElementById('wishlist-count').textContent = `(${remaining} item${remaining > 1 ? 's' : ''})`;
+        }
+      });
+    }
+
+    function clearAll() {
+      if (!confirm('Remove all items from your wishlist?')) return;
+      fetch('get-wishlist.php')
+        .then(r => r.json())
+        .then(items => {
+          Promise.all(items.map(item =>
+            fetch('delete-from-wishlist.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: `product_id=${item.id}`
+            })
+          )).then(() => renderWishlist([]));
+        });
+    }
+
+    // Load items on page ready
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('get-wishlist.php')
+        .then(r => r.json())
+        .then(items => renderWishlist(items))
+        .catch(() => renderWishlist([]));
+    });
+  </script>
+</body>
+</html>
